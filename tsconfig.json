@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "rootDir": "./",
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "skipLibCheck": true, // ✅ Ignore .d.ts errors
+        "typeRoots": [
+            "./node_modules/@types"
+        ], // ✅ Only include types from @types
+        "types": [
+            "node"
+        ] // ✅ Only load node types
+    },
+    "ts-node": {
+        "require": [
+            "tsconfig-paths/register"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "dist",
+    ]
+}
