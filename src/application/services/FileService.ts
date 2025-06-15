@@ -1,7 +1,6 @@
 import { z, ZodType } from "zod";
-import { FILETYPES, IFile, IFileReq } from "../../domain/models/fileTypes";
 import { FileStorageUseCase } from "../ports/inbound-ports";
-import { FileStoragePort, ImageProcessingPort } from "../ports/outband-ports";
+import { FileStoragePort } from "../ports/outband-ports";
 import { FormatFileName } from "../helpers/formatters";
 import { ImageProcessingService } from "./ImageProcessingService";
 
@@ -18,8 +17,8 @@ export class FileService implements FileStorageUseCase {
         this.fileStorage = fileStorage;
     }
 
-    async uploadFile(file: IFileReq): Promise<string> {
-        const validationSchema: ZodType<IFileReq> = z.object({
+    async uploadFile(file: IFileRequest): Promise<IFileMeta> {
+        const validationSchema: ZodType<IFileRequest> = z.object({
             name: z.string(),
             type: z.enum([
                 FILETYPES.IMAGE,
@@ -41,12 +40,10 @@ export class FileService implements FileStorageUseCase {
         // Validate file input
         validationSchema.parse(file);
 
-        const url = await this.fileStorage.storeFile(file);
-
-        return url;
+        return await this.fileStorage.storeFile(file);;
     }
 
-    async getFile(url: string): Promise<IFile> {
+    async getFile(url: string): Promise<IFileMeta> {
         const file = await this.fileStorage.getFile(url);
 
         return file;

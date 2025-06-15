@@ -1,8 +1,6 @@
-import { IFile, IFileReq } from "../../domain/models/fileTypes";
-
 export interface FileStoragePort {
-    storeFile(file: IFileReq): Promise<string>;
-    getFile(url: string): Promise<IFile>;
+    storeFile(file: IFileRequest): Promise<IFileMeta>;
+    getFile(url: string): Promise<IFileMeta>;
     deleteFile(url: string): Promise<void>;
 }
 

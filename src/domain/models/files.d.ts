@@ -1,18 +1,21 @@
-export interface IFile {
+interface IFileMeta {
     id: string;
     name: string;
     url: string;
+    base_url: string;
+    full_url: string;
     type: FILETYPES;
     size: number;
     data?: Buffer;
 }
-export interface IFileReq {
+
+interface IFileRequest {
     name: string;
     type: FILETYPES;
     data: Buffer;
 }
 
-export enum FILETYPES {
+enum FILETYPES {
     IMAGE = "img",
     VIDEO = "vid",
     AUDIO = "aud",

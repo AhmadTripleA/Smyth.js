@@ -4,7 +4,9 @@
   "description": "a nodejs package acting as a microservice for file handling",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon --watch src --exec ts-node src/app.ts"
+    "dev": "concurrently \"npm run build:dev\" \"npm run start:dev\"",
+    "start:dev": "nodemon --enable-source-maps --trace-deprecation --trace-warnings dist/app.js",
+    "build:dev": "tsc --watch --preserveWatchOutput"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,7 @@
     "@types/express": "^5.0.2",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.15.29",
+    "concurrently": "^9.1.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",

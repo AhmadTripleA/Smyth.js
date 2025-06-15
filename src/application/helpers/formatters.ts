@@ -1,5 +1,3 @@
-import { FILETYPES } from "../../domain/models/fileTypes";
-
 export function getFileType(filename: string): FILETYPES {
     const ext = filename.split(".").pop()?.toLowerCase();
     switch (ext) {

@@ -3,7 +3,7 @@ configDotenv();
 import express from 'express';
 import { json } from 'body-parser';
 import { createServer } from 'http';
-import expressRouter from './interfaces/http/router';
+import expressRouter from './src/interfaces/http/router';
 
 const app = express();
 const server = createServer(app);

@@ -1,10 +1,9 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { FileStoragePort } from '../../application/ports/outband-ports';
-import { IFile, IFileReq, FILETYPES } from '../../domain/models/fileTypes';
+import * as fs from "fs";
+import * as path from "path";
+import { FileStoragePort } from "../../application/ports/outband-ports";
 
 const PREFIX = process.env.FILE_UPLOAD_PATH;
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL ?? "";
 
 export class LocalFileStorage implements FileStoragePort {
     private basePath = path.resolve(__dirname, `../../../public/${PREFIX}`);
@@ -14,8 +13,8 @@ export class LocalFileStorage implements FileStoragePort {
             fs.mkdirSync(this.basePath, { recursive: true });
         }
     }
- 
-    public async storeFile(file: IFileReq): Promise<string> {
+
+    public async storeFile(file: IFileRequest): Promise<IFileMeta> {
         const folderPath = path.join(this.basePath, file.type);
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
@@ -24,12 +23,23 @@ export class LocalFileStorage implements FileStoragePort {
         const filePath = path.join(folderPath, file.name);
         await fs.promises.writeFile(filePath, file.data);
 
-        // Return a URL-friendly path for frontend access
-        return `/${PREFIX}/${file.type}/${file.name}`;
+        const stats = await fs.promises.stat(filePath);
+        const fileUrl = `/${PREFIX}/${file.type}/${file.name}`;
+
+        // Return a URL-friendly path with complete IFile info
+        return {
+            id: stats.ino.toString(),
+            name: file.name,
+            type: file.type,
+            url: fileUrl,
+            base_url: BASE_URL,
+            full_url: BASE_URL + fileUrl,
+            size: stats.size,
+        };
     }
 
-    public async getFile(url: string): Promise<IFile> {
-        const urlParts = url.split('/');
+    public async getFile(url: string): Promise<IFileMeta> {
+        const urlParts = url.split("/");
         const fileName = urlParts.pop();
         const folderName = urlParts.pop();
         const filePath = path.join(
@@ -39,7 +49,7 @@ export class LocalFileStorage implements FileStoragePort {
         );
 
         if (!fs.existsSync(filePath)) {
-            throw new Error('File not found');
+            throw new Error("File not found");
         }
 
         const stats = await fs.promises.stat(filePath);
@@ -49,6 +59,8 @@ export class LocalFileStorage implements FileStoragePort {
             id: stats.ino.toString(),
             name: path.basename(filePath),
             url,
+            base_url: BASE_URL,
+            full_url: BASE_URL + url,
             type: fileType,
             size: stats.size,
         };
@@ -57,7 +69,7 @@ export class LocalFileStorage implements FileStoragePort {
     async deleteFile(url: string): Promise<void> {
         const filePath = path.join(this.basePath, url);
         if (!fs.existsSync(filePath)) {
-            throw new Error('File not found');
+            throw new Error("File not found");
         }
 
         await fs.promises.unlink(filePath);
