@@ -5,7 +5,6 @@ The goal is to create a package that acts as a micro-service for any sort of app
 
 - **File Upload**: Upload images to the microservice.
 - **Image Processing**: Process images using various techniques.
-- **Image Retrieval**: Retrieve images from different storage solutions.
 
 ## Getting Started
 
@@ -22,13 +21,12 @@ The goal is to create a package that acts as a micro-service for any sort of app
 
 3. **Run the microservice**:
    ```
-   npm start
+   npm run dev
    ```
 
 ## Usage
 
 - Use the HTTP interface to upload and retrieve images.
-- Interact with the CLI for command-line operations.
 
 ## Architecture
 
@@ -37,7 +35,7 @@ This microservice is built using a hexagonal architecture, which promotes a clea
 - **Application Layer**: Contains services and ports for file handling operations.
 - **Domain Layer**: Defines the core models used in the application.
 - **Infrastructure Layer**: Implements the storage, processing, and retrieval mechanisms.
-- **Interface Layer**: Provides HTTP and CLI interfaces for user interaction.
+- **Interface Layer**: Provides HTTP (for now) for user interaction.
 
 ## License
 
